@@ -1,0 +1,406 @@
+/* Stargazer · Miuix visual system
+   Inspired by Xiaomi HyperOS / Miuix: quiet surfaces, clear hierarchy,
+   MiSans typography, soft squircle corners, restrained orange accents.
+   No layout markup changes; native site controls and material choices remain. */
+:root {
+  color-scheme: dark;
+  --accent:#ff6900;
+  --accent-2:#ff8b3d;
+  --accent-ink:#211006;
+  --grad-btn:#ff6900;
+  --bg:#101114;
+  --bg-2:#18191d;
+  --ink:#f6f6f7;
+  --ink-2:#c0c1c6;
+  --ink-3:#90929a;
+  --surface:rgba(34,35,40,.70);
+  --surface-2:rgba(43,44,49,.83);
+  --surface-3:rgba(56,57,63,.92);
+  --hair:rgba(255,255,255,.085);
+  --hair-2:rgba(255,255,255,.15);
+  --hi:rgba(255,255,255,.12);
+  --scrim:rgba(5,6,8,.58);
+  --edge-lo:rgba(0,0,0,.20);
+  --r-tag:12px;
+  --r-ctl:15px;
+  --r-m:19px;
+  --r-sq:24px;
+  --r-lg:27px;
+  --shadow-s:0 2px 9px rgba(0,0,0,.12);
+  --shadow-m:0 8px 28px rgba(0,0,0,.17);
+  --shadow-l:0 14px 42px rgba(0,0,0,.22);
+  --glow:0 5px 18px rgba(255,105,0,.16);
+  --fx-blur:18px;
+  --fx-sat:125%;
+  --fx-bri:1.02;
+  --t-lift:-2px;
+  --miuix-motion:cubic-bezier(.2,.75,.25,1);
+  --miuix-stroke:rgba(255,255,255,.10);
+  --wall-f:blur(11px) saturate(.62) brightness(.62);
+  --wall-o:linear-gradient(180deg,rgba(12,13,16,.80),rgba(15,16,19,.91) 50%,rgba(13,14,16,.96));
+}
+html[data-scheme=light] {
+  color-scheme:light;
+  --accent:#ff6900;
+  --accent-2:#f78332;
+  --accent-ink:#fff;
+  --grad-btn:#ff6900;
+  --bg:#f4f5f7;
+  --bg-2:#eaecf0;
+  --ink:#202126;
+  --ink-2:#5c5e65;
+  --ink-3:#858891;
+  --surface:rgba(255,255,255,.76);
+  --surface-2:rgba(255,255,255,.90);
+  --surface-3:#fff;
+  --hair:rgba(28,30,37,.075);
+  --hair-2:rgba(28,30,37,.13);
+  --hi:rgba(255,255,255,.95);
+  --scrim:rgba(22,24,30,.24);
+  --edge-lo:rgba(38,41,50,.035);
+  --shadow-s:0 2px 10px rgba(27,30,40,.035);
+  --shadow-m:0 8px 26px rgba(27,30,40,.055);
+  --shadow-l:0 15px 42px rgba(27,30,40,.085);
+  --glow:0 5px 18px rgba(255,105,0,.12);
+  --fx-blur:22px;
+  --fx-sat:120%;
+  --fx-bri:1.02;
+  --miuix-stroke:rgba(28,30,37,.075);
+  --wall-f:blur(13px) saturate(.55) brightness(1.08);
+  --wall-o:linear-gradient(180deg,rgba(244,245,247,.79),rgba(244,245,247,.91) 48%,rgba(244,245,247,.97));
+}
+html,body {
+  background-color:var(--bg);
+}
+body {
+  color:var(--ink);
+  font-family:var(--font-ui);
+  line-height:1.72;
+  letter-spacing:0;
+  background-image:none;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+::selection { background:rgba(255,105,0,.24);color:var(--ink); }
+:focus-visible { outline:2px solid var(--accent);outline-offset:3px; }
+a { text-decoration-thickness:1px;text-underline-offset:3px; }
+
+/* Keep the existing wallpaper only as a quiet tonal backdrop. */
+.wall img {
+  opacity:.22;
+  filter:var(--wall-f);
+  transform:translate3d(0,var(--py,0px),0) scale(1.1);
+}
+.wall:after { background:var(--wall-o); }
+html[data-scheme=light] .wall img { opacity:.11; }
+html[data-scheme=paper] .wall:after { background:var(--wall-o); }
+
+/* MIUIX surfaces: layered tint + Gaussian backdrop blur, without lens warping. */
+.g {
+  border:1px solid var(--miuix-stroke);
+  border-radius:var(--r-sq);
+  box-shadow:var(--shadow-m);
+  isolation:isolate;
+  transition:box-shadow .24s var(--miuix-motion),border-color .24s ease,transform .24s var(--miuix-motion);
+}
+.g:after {
+  box-shadow:inset 0 1px 0 var(--hi),inset 0 0 0 1px rgba(255,255,255,.018);
+}
+.g > .fx {
+  border-radius:inherit;
+  -webkit-backdrop-filter:blur(var(--fx-blur)) saturate(var(--fx-sat)) brightness(var(--fx-bri));
+  backdrop-filter:blur(var(--fx-blur)) saturate(var(--fx-sat)) brightness(var(--fx-bri));
+  background:var(--surface);
+  transition:background-color .24s ease;
+}
+html[data-mat=liquid] .g > .fx {
+  background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025)),var(--surface);
+  -webkit-backdrop-filter:blur(20px) saturate(126%) brightness(1.025);
+  backdrop-filter:blur(20px) saturate(126%) brightness(1.025);
+}
+html[data-scheme=light][data-mat=liquid] .g > .fx {
+  background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.26)),var(--surface);
+  -webkit-backdrop-filter:blur(22px) saturate(120%) brightness(1.02);
+  backdrop-filter:blur(22px) saturate(120%) brightness(1.02);
+}
+html[data-mat=liquid] .g > .fx:before,
+html[data-mat=liquid] .g > .fx:after { display:none !important;content:none !important; }
+html[data-mat=liquid] .g:hover > .fx,
+html[data-mat=liquid] .g.lit > .fx {
+  --fx-blur:20px;
+  --fx-sat:126%;
+  --fx-bri:1.025;
+}
+.g:hover {
+  border-color:var(--hair-2);
+  box-shadow:var(--shadow-l);
+}
+.g.lit { box-shadow:var(--shadow-l); }
+html[data-mat=liquid] .g:not(.lift):hover { transform:translateY(-1px); }
+html[data-mat=paper] .g:hover { transform:none; }
+
+/* Avoid oversized shiny card treatment; keep surfaces quiet and tactile. */
+.rail-in,.dock-in,.sheet-panel,.ft {
+  border:1px solid var(--hair);
+}
+.rail-in { box-shadow:var(--shadow-m); }
+.rail-id img {
+  border:1px solid var(--hair-2);
+  box-shadow:var(--shadow-s);
+}
+.rail-id:hover img { transform:scale(1.025); }
+.rail-nav { gap:5px; }
+.rail-nav a {
+  border:1px solid transparent;
+  border-radius:14px;
+  background:transparent;
+  box-shadow:none;
+  color:var(--ink-2);
+  transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .2s var(--miuix-motion);
+}
+.rail-nav a:hover {
+  color:var(--ink);
+  background:var(--surface-2);
+  transform:translateX(1px);
+}
+.rail-nav a[aria-current] {
+  color:var(--accent);
+  background:color-mix(in srgb,var(--accent) 10%,var(--surface));
+  border-color:color-mix(in srgb,var(--accent) 12%,transparent);
+  box-shadow:none;
+  font-weight:600;
+}
+html[data-scheme=light] .rail-nav a[aria-current] {
+  background:rgba(255,105,0,.09);
+  color:#df5b00;
+}
+.dock-in {
+  border:1px solid var(--hair);
+  background:var(--surface);
+  box-shadow:var(--shadow-l);
+}
+.dock-in .thumb {
+  background:var(--surface-3);
+  box-shadow:none;
+}
+.dock-in a[aria-current] { color:var(--ink); }
+html[data-scheme=light] .dock-in {
+  background:rgba(255,255,255,.76);
+  box-shadow:0 8px 30px rgba(27,30,40,.08);
+}
+
+/* Type hierarchy: MiSans does the work; titles stay clean, without gradient fills. */
+.htitle {
+  color:var(--ink);
+  background:none;
+  -webkit-background-clip:border-box;
+  background-clip:border-box;
+  -webkit-text-fill-color:currentColor;
+  letter-spacing:-.045em;
+  line-height:1.08;
+  text-wrap:balance;
+}
+.htitle em {
+  color:var(--ink-3);
+  -webkit-text-fill-color:var(--ink-3);
+  letter-spacing:.09em;
+  font-weight:500;
+}
+.sub {
+  color:var(--ink-2);
+  max-width:42ch;
+  line-height:1.82;
+  font-weight:350;
+}
+.eyebrow {
+  background:var(--surface);
+  border:1px solid var(--hair);
+  box-shadow:none;
+  color:var(--ink-2);
+  letter-spacing:.015em;
+  backdrop-filter:blur(14px) saturate(120%);
+  -webkit-backdrop-filter:blur(14px) saturate(120%);
+}
+.eyebrow s { background:var(--accent);box-shadow:none; }
+.eyebrow s:after { background:rgba(255,105,0,.18); }
+
+/* MIUIX-style spacing: a clear hero, comfortable content groups and consistent rhythm. */
+.mast { padding-top:clamp(36px,7vh,70px)!important;padding-bottom:clamp(34px,6vh,58px)!important; }
+.mast-in { gap:clamp(22px,3vw,36px)!important; }
+.sec { padding-top:clamp(28px,5vh,50px)!important;padding-bottom:clamp(30px,5vh,52px)!important; }
+.sh { margin-top:28px;padding-bottom:9px; }
+.sh h2 { font-size:clamp(20px,2.3vw,24px);font-weight:650;letter-spacing:-.03em; }
+.group { padding:7px; }
+.cc { padding:17px!important;gap:14px!important; }
+.cc-h { align-items:center;gap:8px; }
+.cc-h b { font-weight:650;letter-spacing:-.015em; }
+.cc-h .mono { color:var(--ink-3);font-size:10.5px; }
+.tiles { gap:9px; }
+.tile {
+  min-width:0;
+  padding:14px 15px;
+  border:1px solid var(--hair);
+  border-radius:17px;
+  background:var(--surface);
+  box-shadow:none;
+  transition:background-color .2s ease,border-color .2s ease,transform .2s var(--miuix-motion);
+}
+.tile:hover {
+  border-color:var(--hair-2);
+  background:var(--surface-2);
+  transform:translateY(-1px);
+}
+.tile.on {
+  color:var(--accent);
+  background:color-mix(in srgb,var(--accent) 11%,var(--surface-2));
+  border-color:color-mix(in srgb,var(--accent) 18%,var(--hair));
+  box-shadow:none;
+}
+.tile.on .tl { color:var(--accent); }
+.tile .tl { color:var(--ink-3);font-weight:500; }
+.tile .tv { color:var(--ink);font-weight:650;letter-spacing:-.025em; }
+.tile.on .tv { color:var(--ink); }
+.card {
+  border:1px solid var(--hair);
+  border-radius:21px;
+  box-shadow:var(--shadow-s);
+  transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s var(--miuix-motion);
+}
+.card:hover { border-color:var(--hair-2);box-shadow:var(--shadow-m); }
+.card b { font-size:16.5px;letter-spacing:-.015em; }
+.card p { line-height:1.75; }
+.card .dt { color:var(--accent);font-weight:600; }
+.row {
+  border-radius:15px;
+  transition:background-color .2s ease,transform .2s var(--miuix-motion);
+}
+.row+.row { box-shadow:inset 0 1px 0 var(--hair); }
+.row:hover { background:var(--surface); }
+.ico { border-radius:14px; }
+.chip {
+  height:32px;
+  border:1px solid var(--hair);
+  background:var(--surface);
+  box-shadow:none;
+  font-weight:500;
+  transition:background-color .2s ease,border-color .2s ease,color .2s ease,transform .2s var(--miuix-motion);
+}
+.chip:hover { background:var(--surface-2);border-color:var(--hair-2); }
+.chip.xs { height:25px; }
+
+/* System-like action hierarchy: one clear primary action, quiet secondary actions. */
+.btn {
+  height:46px;
+  padding-inline:21px;
+  border-radius:14px;
+  font-weight:600;
+  letter-spacing:0;
+  box-shadow:none;
+  transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .2s var(--miuix-motion);
+}
+.btn.pri {
+  background:var(--accent);
+  color:#fff;
+  border:1px solid transparent;
+  box-shadow:0 3px 10px rgba(255,105,0,.14);
+}
+.btn.pri:hover {
+  background:#f45f00;
+  transform:translateY(-1px);
+  box-shadow:0 5px 15px rgba(255,105,0,.2);
+}
+.btn.gh {
+  background:var(--surface);
+  color:var(--ink);
+  border:1px solid var(--hair);
+  box-shadow:none;
+}
+.btn.gh:hover { background:var(--surface-2);border-color:var(--hair-2); }
+.btn:active,.chip:active,.row:active { transform:scale(.975); }
+.btn:focus-visible,.chip:focus-visible,.tile:focus-visible { outline:2px solid var(--accent);outline-offset:3px; }
+
+/* Settings sheet, popup and footer share the same system surface. */
+.sheet-mask {
+  background:var(--scrim)!important;
+  -webkit-backdrop-filter:blur(7px) saturate(110%);
+  backdrop-filter:blur(7px) saturate(110%);
+}
+.sheet-panel {
+  border:1px solid var(--hair);
+  border-radius:25px;
+  box-shadow:var(--shadow-l);
+  background:var(--bg-2);
+}
+.sheet-panel > .fx {
+  background:var(--surface-2);
+  -webkit-backdrop-filter:blur(22px) saturate(125%);
+  backdrop-filter:blur(22px) saturate(125%);
+}
+.sheet-head h2 { font-weight:650;letter-spacing:-.025em; }
+.sheet-x {
+  border:1px solid var(--hair);
+  background:var(--surface);
+  box-shadow:none;
+}
+.sheet-links a {
+  border-radius:14px;
+  background:var(--surface);
+  border-color:var(--hair);
+}
+.sheet-links a:hover { background:var(--surface-2); }
+.sheet-close {
+  background:var(--surface-2);
+  border-color:var(--hair);
+  border-radius:14px;
+}
+.ft { border:1px solid var(--hair);box-shadow:var(--shadow-m); }
+footer .say h3 { font-weight:650;letter-spacing:-.03em; }
+footer .end { color:var(--ink-3); }
+.prose { line-height:1.9; }
+.prose :where(h2,h3) { letter-spacing:-.025em;line-height:1.4;font-weight:650; }
+.prose :where(a) { color:var(--accent);text-decoration-color:color-mix(in srgb,var(--accent) 36%,transparent); }
+.prose :where(blockquote) {
+  border-left-color:var(--accent);
+  background:color-mix(in srgb,var(--accent) 5%,var(--surface));
+  border-radius:0 12px 12px 0;
+}
+.prose :where(code) { border-radius:6px; }
+.pager a {
+  border:1px solid var(--hair);
+  border-radius:18px;
+  transition:transform .2s var(--miuix-motion),background-color .2s ease,border-color .2s ease;
+}
+.pager a:hover { border-color:var(--hair-2);background:var(--surface);transform:translateY(-1px); }
+.boot .veil { background:var(--bg);backdrop-filter:blur(28px) saturate(125%); }
+.boot .veil:after { background:var(--wall-o); }
+
+/* The original material picker remains functional; each non-liquid material keeps its own recipe. */
+html[data-mat=frosted] .g > .fx {
+  backdrop-filter:blur(25px) saturate(110%);
+  -webkit-backdrop-filter:blur(25px) saturate(110%);
+}
+html[data-mat=acrylic] .g > .fx { backdrop-filter:blur(32px) saturate(90%);-webkit-backdrop-filter:blur(32px) saturate(90%); }
+html[data-mat=paper] .g > .fx { backdrop-filter:none;-webkit-backdrop-filter:none; }
+@supports not (backdrop-filter:blur(1px)) {
+  html[data-mat=liquid] .g > .fx { background:rgba(28,29,33,.94); }
+  html[data-scheme=light][data-mat=liquid] .g > .fx { background:rgba(255,255,255,.96); }
+}
+@media (width<=640px) {
+  .mast { padding-top:32px!important;padding-bottom:28px!important; }
+  .sec { padding-top:26px!important;padding-bottom:28px!important; }
+  .cc { padding:13px!important;gap:12px!important; }
+  .tile { padding:12px 13px;border-radius:15px; }
+  .card { border-radius:18px; }
+  .dock-in {
+    background:var(--surface-2);
+    border:1px solid var(--hair);
+    box-shadow:0 8px 28px rgba(0,0,0,.16);
+    -webkit-backdrop-filter:blur(24px) saturate(125%);
+    backdrop-filter:blur(24px) saturate(125%);
+  }
+  .sheet-panel { border-radius:24px 24px 0 0; }
+  html[data-scheme=light] .dock-in { background:rgba(255,255,255,.84);box-shadow:0 8px 26px rgba(27,30,40,.08); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .g,.tile,.card,.btn,.chip,.row,.pager a { transition:none!important; }
+}
