@@ -1,0 +1,83 @@
+/* Stargazer Gaussian Glass — glass-material-only refinement.
+   Leaves the original layout, palette, typography, and background untouched. */
+html[data-mat=liquid] {
+  --stg-glass-blur: 22px;
+  --stg-glass-saturation: 136%;
+  --stg-glass-brightness: 1.035;
+}
+html[data-scheme=light][data-mat=liquid] {
+  --stg-glass-blur: 24px;
+  --stg-glass-saturation: 126%;
+  --stg-glass-brightness: 1.015;
+}
+
+/* Real backdrop Gaussian blur, without displacement/refraction distortion. */
+html[data-mat=liquid] .g > .fx {
+  background:
+    linear-gradient(145deg,
+      rgba(255,255,255,.115) 0%,
+      rgba(255,255,255,.035) 42%,
+      rgba(255,255,255,.018) 100%),
+    rgba(17,22,34,.115);
+  -webkit-backdrop-filter:
+    blur(var(--stg-glass-blur)) saturate(var(--stg-glass-saturation))
+    brightness(var(--stg-glass-brightness)) !important;
+  backdrop-filter:
+    blur(var(--stg-glass-blur)) saturate(var(--stg-glass-saturation))
+    brightness(var(--stg-glass-brightness)) !important;
+  /* Keep the blur constant on hover: no sudden clear/sharp flash. */
+  transition: background-color .28s ease;
+}
+
+/* Remove rainbow rims and spotlight overlays from the previous experiment. */
+html[data-mat=liquid] .g > .fx::before,
+html[data-mat=liquid] .g > .fx::after {
+  display: none !important;
+  content: none !important;
+}
+html[data-mat=liquid] .g:hover > .fx,
+html[data-mat=liquid] .g.lit > .fx {
+  --fx-blur: var(--stg-glass-blur);
+  --fx-sat: var(--stg-glass-saturation);
+  --fx-bri: var(--stg-glass-brightness);
+}
+
+/* A single quiet highlight on the upper edge; no plastic-looking glow. */
+html[data-mat=liquid] .g::after {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.34),
+    inset 0 0 0 1px rgba(255,255,255,.075),
+    inset 0 -1px 0 rgba(0,0,0,.12) !important;
+}
+html[data-scheme=light][data-mat=liquid] .g > .fx {
+  background:
+    linear-gradient(145deg,
+      rgba(255,255,255,.42) 0%,
+      rgba(255,255,255,.20) 48%,
+      rgba(255,255,255,.12) 100%),
+    rgba(245,247,255,.12);
+}
+html[data-scheme=light][data-mat=liquid] .g::after {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.88),
+    inset 0 0 0 1px rgba(38,49,91,.095),
+    inset 0 -1px 0 rgba(38,49,91,.055) !important;
+}
+
+/* Graceful fallback where backdrop-filter is unavailable. */
+@supports not (backdrop-filter: blur(1px)) {
+  html[data-mat=liquid] .g > .fx { background: rgba(24,29,43,.88); }
+  html[data-scheme=light][data-mat=liquid] .g > .fx {
+    background: rgba(246,248,255,.92);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  html[data-mat=liquid] .g > .fx {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(22,27,40,.92);
+  }
+  html[data-scheme=light][data-mat=liquid] .g > .fx {
+    background: rgba(246,248,255,.94);
+  }
+}
